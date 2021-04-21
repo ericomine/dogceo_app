@@ -3,8 +3,8 @@ import 'package:dogceo_app/shared/result.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("API Tests", () {
-    test("Should get 10 random dog breeds and subbreeds if any", () async {
+  group("API Tests:", () {
+    test("Should get 10 random dog breeds and subbreeds if any.", () async {
       final sut = DogAPI();
       final breedsResult = await sut.getBreeds(10);
 
@@ -14,7 +14,7 @@ void main() {
 
       final breeds = breedsResult.value;
       if (breeds == null) {
-        fail("Returned null, which is unexpected");
+        fail("Returned null, which is unexpected.");
       }
 
       expect(breeds.length, equals(10));
