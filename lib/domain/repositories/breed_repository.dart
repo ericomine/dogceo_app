@@ -11,8 +11,10 @@ abstract class AbstractBreedRepository {
 }
 
 class BreedRepository implements AbstractBreedRepository {
-  late DogAPI _api;
-  BreedRepository(this._api);
+  late AbstractDogAPI _api;
+  BreedRepository([AbstractDogAPI? api]) {
+    _api = api ?? DogAPI();
+  }
 
   Future<Result<List<Breed>>> getTenNewBreeds(
       List<String> oldBreedNames) async {
@@ -55,6 +57,7 @@ class BreedRepository implements AbstractBreedRepository {
           .where((name) => !oldBreedNames.contains(name))
           .where((name) => !accBreeds.contains(name))
           .take(amountLeft)
+          .toSet()
           .toList();
 
       return _getNewBreeds(
