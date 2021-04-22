@@ -8,6 +8,7 @@ abstract class AbstractBreedRepository {
   Future<Result<List<Breed>>> getTenNewBreeds(List<String> oldBreedNames);
   Future<Result<List<String>>> getTenNewImages(
       String breedPath, List<String> oldImages);
+  Future<Result<String>> getImage(String breedPath);
 }
 
 class BreedRepository implements AbstractBreedRepository {
@@ -125,5 +126,20 @@ class BreedRepository implements AbstractBreedRepository {
 
     return _getNewImages(
         breedPath, oldImages, accImages, amountLeft, attemptsLeft - 1);
+  }
+
+  Future<Result<String>> getImage(String breedPath) async {
+    try {
+      final getNewImagesResult = await _api.getImages(breedPath, 1);
+
+      if (getNewImagesResult is Failure) {
+        return Result.failure(getNewImagesResult.message!);
+      }
+
+      final newImages = getNewImagesResult.value!;
+      return Result.success(newImages.first);
+    } catch (error) {
+      return Result.failure("Error getting image.");
+    }
   }
 }

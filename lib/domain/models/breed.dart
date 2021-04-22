@@ -1,11 +1,25 @@
-import 'dart:convert';
+import '../../shared/result.dart';
+import '../repositories/breed_repository.dart';
 
 class Breed {
+  final _breedRepository = BreedRepository();
+
   final String name;
+  String _imagePath = "";
 
   Breed({
     required this.name,
   });
+
+  Future<String> get imagePath async {
+    if (_imagePath.isEmpty) {
+      final getImageResult = await _breedRepository.getImage(name);
+      if (getImageResult is Success) {
+        return getImageResult.value!;
+      }
+    }
+    return _imagePath;
+  }
 
   Breed copyWith({
     String? name,
@@ -21,18 +35,8 @@ class Breed {
     };
   }
 
-  factory Breed.fromMap(Map<String, dynamic> map) {
-    return Breed(
-      name: map['name'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Breed.fromJson(String source) => Breed.fromMap(json.decode(source));
-
   @override
-  String toString() => 'Breed(name: $name)';
+  String toString() => 'Breed(name: $name, imagePath: $_imagePath)';
 
   @override
   bool operator ==(Object other) {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../shared/responsive_builder.dart';
 import 'home_store.dart';
+import 'widgets/breed_card.dart';
+import 'widgets/breed_tile.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -40,30 +43,96 @@ class _HomePageState extends State<HomePage> {
                 .showSnackBar(SnackBar(content: Text(store.errorMessage)));
           }
 
-          return Column(
-            children: [
-              Observer(builder: (_) {
-                if (store.loading) return LinearProgressIndicator();
-                return SizedBox(height: 1);
-              }),
-              Expanded(
-                child: Observer(
-                  builder: (context) {
-                    return ListView.builder(
-                      controller: scrollCtrl,
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: store.breeds.length,
-                      itemBuilder: (context, index) {
-                        return Text(store.breeds[index].name);
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
+          return ResponsiveBuilder(
+            mobile: MobileContent(store: store, scrollCtrl: scrollCtrl),
+            desktop: DesktopContent(store: store, scrollCtrl: scrollCtrl),
           );
         },
       ),
+    );
+  }
+}
+
+class MobileContent extends StatelessWidget {
+  final HomeStore store;
+  final ScrollController scrollCtrl;
+
+  const MobileContent({Key? key, required this.store, required this.scrollCtrl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Observer(builder: (_) {
+          if (store.loading) return LinearProgressIndicator();
+          return SizedBox(height: 1);
+        }),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Observer(
+              builder: (context) {
+                return ListView.builder(
+                  controller: scrollCtrl,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: store.breeds.length,
+                  itemBuilder: (context, index) {
+                    final breed = store.breeds[index];
+                    return BreedTile(
+                        breed: breed, image: store.images[breed.name]);
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DesktopContent extends StatelessWidget {
+  final HomeStore store;
+  final ScrollController scrollCtrl;
+
+  const DesktopContent(
+      {Key? key, required this.store, required this.scrollCtrl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Observer(builder: (_) {
+          if (store.loading) return LinearProgressIndicator();
+          return SizedBox(height: 1);
+        }),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Observer(
+              builder: (context) {
+                return GridView.builder(
+                  controller: scrollCtrl,
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10),
+                  itemCount: store.breeds.length,
+                  itemBuilder: (context, index) {
+                    final breed = store.breeds[index];
+                    return BreedCard(
+                        breed: breed, image: store.images[breed.name]);
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

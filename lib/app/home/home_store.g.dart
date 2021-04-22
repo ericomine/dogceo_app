@@ -12,15 +12,30 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   final _$breedsAtom = Atom(name: '_HomeStoreBase.breeds');
 
   @override
-  List<Breed> get breeds {
+  ObservableList<Breed> get breeds {
     _$breedsAtom.reportRead();
     return super.breeds;
   }
 
   @override
-  set breeds(List<Breed> value) {
+  set breeds(ObservableList<Breed> value) {
     _$breedsAtom.reportWrite(value, super.breeds, () {
       super.breeds = value;
+    });
+  }
+
+  final _$imagesAtom = Atom(name: '_HomeStoreBase.images');
+
+  @override
+  ObservableMap<String, String> get images {
+    _$imagesAtom.reportRead();
+    return super.images;
+  }
+
+  @override
+  set images(ObservableMap<String, String> value) {
+    _$imagesAtom.reportWrite(value, super.images, () {
+      super.images = value;
     });
   }
 
@@ -81,6 +96,7 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   String toString() {
     return '''
 breeds: ${breeds},
+images: ${images},
 loading: ${loading},
 didLoad: ${didLoad},
 errorMessage: ${errorMessage}

@@ -12,7 +12,10 @@ abstract class _HomeStoreBase with Store {
   final _breedRepository = BreedRepository();
 
   @observable
-  List<Breed> breeds = [];
+  ObservableList<Breed> breeds = ObservableList<Breed>();
+
+  @observable
+  ObservableMap<String, String> images = ObservableMap<String, String>();
 
   @observable
   bool loading = false;
@@ -40,14 +43,14 @@ abstract class _HomeStoreBase with Store {
       return false;
     }
 
+    final newBreeds = newBreedsResult.value!;
+    for (final breed in newBreeds) {
+      images[breed.name] = await breed.imagePath;
+    }
+
     loading = false;
     didLoad = true;
-    final newBreeds = newBreedsResult.value!;
-
-    print(breedNames);
-    print(newBreeds.map((b) => b.name).toList());
-
-    breeds = [...breeds, ...newBreeds];
+    breeds.addAll(newBreeds);
     return true;
   }
 }
