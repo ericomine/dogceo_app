@@ -27,7 +27,8 @@ class BreedCard extends StatelessWidget {
               ),
             ),
           ),
-        Text(breed.name)
+        SizedBox(height: 10),
+        Text(breed.name, style: Theme.of(context).textTheme.headline6)
       ],
     );
   }

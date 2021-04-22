@@ -30,7 +30,10 @@ class BreedTile extends StatelessWidget {
               ),
             ),
           SizedBox(width: 15),
-          Expanded(flex: 10, child: Text(breed.name)),
+          Expanded(
+              flex: 10,
+              child: Text(breed.name,
+                  style: Theme.of(context).textTheme.bodyText1)),
           Expanded(flex: 1, child: Icon(Icons.chevron_right)),
         ],
       ),
