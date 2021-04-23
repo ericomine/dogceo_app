@@ -10,10 +10,9 @@ abstract class AbstractDogAPI {
 }
 
 class DogAPI implements AbstractDogAPI {
-  late final Dio _dio;
+  static final Dio _dio = Dio();
 
   DogAPI() {
-    _dio = Dio();
     _dio.options.baseUrl = "https://dog.ceo/api";
     _dio.options.connectTimeout = 3000;
     _dio.options.receiveTimeout = 2000;

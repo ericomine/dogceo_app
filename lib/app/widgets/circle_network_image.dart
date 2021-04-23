@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'maybe_hero.dart';
@@ -21,13 +22,13 @@ class CircleNetworkImage extends StatelessWidget {
       child: ClipOval(
         child: AspectRatio(
           aspectRatio: 1,
-          child: imagePath != null
-              ? Image.network(imagePath!, fit: BoxFit.cover,
-                  loadingBuilder: (_, child, progress) {
-                  if (progress == null) return child;
-                  return Image.asset("assets/graphics/paw.png");
-                })
-              : Image.asset("assets/graphics/paw.png"),
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: CachedNetworkImage(
+              imageUrl: imagePath!,
+              placeholder: (_, __) => Image.asset("assets/graphics/paw.png"),
+            ),
+          ),
         ),
       ),
     );
