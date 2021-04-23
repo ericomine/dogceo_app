@@ -50,9 +50,9 @@ class _HomePageState extends State<HomePage> {
               breed: breed, imagePath: store.images[breed.name]!));
 
           return ResponsiveBuilder(
-            mobile: MobileContent(
+            mobile: HomeMobileContent(
                 store: store, scrollCtrl: scrollCtrl, onTap: onTap),
-            desktop: DesktopContent(
+            desktop: HomeDesktopContent(
                 store: store, scrollCtrl: scrollCtrl, onTap: onTap),
           );
         },
@@ -61,12 +61,12 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MobileContent extends StatelessWidget {
+class HomeMobileContent extends StatelessWidget {
   final HomeStore store;
   final ScrollController scrollCtrl;
   final void Function(Breed)? onTap;
 
-  const MobileContent(
+  const HomeMobileContent(
       {Key? key, required this.store, required this.scrollCtrl, this.onTap})
       : super(key: key);
 
@@ -104,12 +104,12 @@ class MobileContent extends StatelessWidget {
   }
 }
 
-class DesktopContent extends StatelessWidget {
+class HomeDesktopContent extends StatelessWidget {
   final HomeStore store;
   final ScrollController scrollCtrl;
   final void Function(Breed)? onTap;
 
-  const DesktopContent(
+  const HomeDesktopContent(
       {Key? key, required this.store, required this.scrollCtrl, this.onTap})
       : super(key: key);
 
