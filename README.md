@@ -5,6 +5,13 @@ Um projeto Flutter consumindo a API [dog.ceo](https://dog.ceo/dog-api/documentat
 ## Screenshots
 
 <div>
+    <img src="./assets/readme/peek-01.gif" width="600"/>
+</div>
+<div>
+    <img src="./assets/readme/peek-02.gif" width="600"/>
+</div>
+
+<div>
     <img src="./assets/readme/dog-01.png" width="200"/>
     <img src="./assets/readme/dog-02.png" width="200"/>
     <img src="./assets/readme/dog-03.png" width="200"/>
