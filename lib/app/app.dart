@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 
-import 'home/home_page.dart';
+import 'router.gr.dart';
 import 'theme_builder.dart';
 
 class App extends StatelessWidget {
+  final _appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: "Dog CEO",
       debugShowCheckedModeBanner: false,
       theme: ThemeBuilder.build(),
-      home: HomePage(),
+      routerDelegate: _appRouter.delegate(),
+      routeInformationParser: _appRouter.defaultRouteParser(),
     );
   }
 }

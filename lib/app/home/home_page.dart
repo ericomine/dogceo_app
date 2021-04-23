@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+import '../../domain/models/breed.dart';
+import '../router.gr.dart';
 import '../shared/responsive_builder.dart';
 import 'home_store.dart';
 import 'widgets/breed_card.dart';
@@ -43,9 +46,14 @@ class _HomePageState extends State<HomePage> {
                 .showSnackBar(SnackBar(content: Text(store.errorMessage)));
           }
 
+          onTap(Breed breed) => AutoRouter.of(context).push(BreedGalleryRoute(
+              breed: breed, imagePath: store.images[breed.name]!));
+
           return ResponsiveBuilder(
-            mobile: MobileContent(store: store, scrollCtrl: scrollCtrl),
-            desktop: DesktopContent(store: store, scrollCtrl: scrollCtrl),
+            mobile: MobileContent(
+                store: store, scrollCtrl: scrollCtrl, onTap: onTap),
+            desktop: DesktopContent(
+                store: store, scrollCtrl: scrollCtrl, onTap: onTap),
           );
         },
       ),
@@ -56,8 +64,10 @@ class _HomePageState extends State<HomePage> {
 class MobileContent extends StatelessWidget {
   final HomeStore store;
   final ScrollController scrollCtrl;
+  final void Function(Breed)? onTap;
 
-  const MobileContent({Key? key, required this.store, required this.scrollCtrl})
+  const MobileContent(
+      {Key? key, required this.store, required this.scrollCtrl, this.onTap})
       : super(key: key);
 
   @override
@@ -80,7 +90,9 @@ class MobileContent extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final breed = store.breeds[index];
                     return BreedTile(
-                        breed: breed, image: store.images[breed.name]);
+                        breed: breed,
+                        image: store.images[breed.name],
+                        onTap: onTap);
                   },
                 );
               },
@@ -95,9 +107,10 @@ class MobileContent extends StatelessWidget {
 class DesktopContent extends StatelessWidget {
   final HomeStore store;
   final ScrollController scrollCtrl;
+  final void Function(Breed)? onTap;
 
   const DesktopContent(
-      {Key? key, required this.store, required this.scrollCtrl})
+      {Key? key, required this.store, required this.scrollCtrl, this.onTap})
       : super(key: key);
 
   @override
@@ -119,13 +132,17 @@ class DesktopContent extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 300,
+                      mainAxisExtent: 240,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10),
                   itemCount: store.breeds.length,
                   itemBuilder: (context, index) {
                     final breed = store.breeds[index];
                     return BreedCard(
-                        breed: breed, image: store.images[breed.name]);
+                      breed: breed,
+                      image: store.images[breed.name],
+                      onTap: onTap,
+                    );
                   },
                 );
               },
