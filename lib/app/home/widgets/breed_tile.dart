@@ -16,7 +16,7 @@ class BreedTile extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap?.call(breed),
       child: Padding(
-        padding: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
         child: Row(
           children: [
             Container(
