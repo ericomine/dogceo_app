@@ -15,8 +15,8 @@ class DogAPI implements AbstractDogAPI {
   DogAPI() {
     _dio = Dio();
     _dio.options.baseUrl = "https://dog.ceo/api";
-    _dio.options.connectTimeout = 5000;
-    _dio.options.receiveTimeout = 3000;
+    _dio.options.connectTimeout = 3000;
+    _dio.options.receiveTimeout = 2000;
   }
 
   @override
