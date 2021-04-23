@@ -52,12 +52,12 @@ documentação da API disponível), observei que só é possível consultar ou (
 (ii) um conjunto aleatório de raças e que (iii) não há um endpoint com paginação disponível.
 
 Dessa forma, para simular uma situação mais comum, onde a API seria chamada uma vez a cada nova página,
-optei por utilizar o endpoint de raças aleatórias e verificar raças repetidas. Isto afeta a performance da
+optei por utilizar o endpoint de raças aleatórias e verificar raças repetidas. Isto afeta gravemente a performance da
 aplicação, pois para obter uma nova página pode ser necessário fazer várias chamadas. Porém, faz mais sentido
 do que salvar a lista completa na primeira leitura.
 
 Isso está sendo corrigido com algumas medidas:
-- retornar os resultados por um stream em vez de utilizar futures
+- retornar os resultados por streams em vez de utilizar futures
 - reutilizar o cliente http entre as chamadas consecutivas
 
 ## Sobre arquitetura
