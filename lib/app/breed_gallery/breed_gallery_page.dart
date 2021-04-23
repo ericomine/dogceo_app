@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../domain/models/breed.dart';
+import '../share_image/share_image_service.dart';
 import '../shared/responsive_builder.dart';
 import '../widgets/circle_network_image.dart';
 import 'breed_gallery_store.dart';
+import 'widgets/actionable_image.dart';
 
 class BreedGalleryPage extends StatefulWidget {
   final Breed breed;
@@ -63,7 +65,9 @@ class MobileContent extends StatelessWidget {
   final BreedGalleryStore store;
   final ScrollController scrollCtrl;
 
-  const MobileContent({
+  final _shareImageService = ShareImageService();
+
+  MobileContent({
     Key? key,
     required this.breed,
     required this.imagePath,
@@ -74,24 +78,33 @@ class MobileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: scrollCtrl,
-        physics: AlwaysScrollableScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            title:
-                Text(breed.name, style: Theme.of(context).textTheme.headline6),
-            flexibleSpace: Hero(
-              tag: imagePath,
-              child: Image.network(imagePath, fit: BoxFit.cover),
-            ),
-            expandedHeight: 200,
-            floating: true,
-            pinned: true,
-          ),
-          GridContent(store: store),
-        ],
-      ),
+      body: ValueListenableBuilder<bool>(
+          valueListenable: _shareImageService,
+          builder: (context, status, _) {
+            return CustomScrollView(
+              controller: scrollCtrl,
+              physics: AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverAppBar(
+                  title: Text(breed.name,
+                      style: Theme.of(context).textTheme.headline6),
+                  flexibleSpace: Hero(
+                      tag: imagePath,
+                      child: Image.network(imagePath, fit: BoxFit.cover)),
+                  expandedHeight: 200,
+                  floating: true,
+                  pinned: true,
+                ),
+                if (status)
+                  SliverToBoxAdapter(child: LinearProgressIndicator()),
+                GridContent(
+                  store: store,
+                  onTapImage:
+                      !status ? _shareImageService.shareImageFromUrl : null,
+                ),
+              ],
+            );
+          }),
     );
   }
 }
@@ -179,8 +192,10 @@ class DesktopSidebar extends StatelessWidget {
 
 class GridContent extends StatelessWidget {
   final BreedGalleryStore store;
+  final void Function(String)? onTapImage;
 
-  const GridContent({Key? key, required this.store}) : super(key: key);
+  const GridContent({Key? key, required this.store, this.onTapImage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -193,11 +208,13 @@ class GridContent extends StatelessWidget {
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => Container(
-              constraints: BoxConstraints(maxWidth: 200, maxHeight: 200),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: CircleNetworkImage(imagePath: store.images[index]),
-              )),
+            constraints: BoxConstraints(maxWidth: 200, maxHeight: 200),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ActionableImage(
+                  onShareImage: onTapImage, imagePath: store.images[index]),
+            ),
+          ),
           childCount: store.images.length,
         ),
       );
